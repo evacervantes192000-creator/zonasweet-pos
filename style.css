@@ -125,3 +125,10 @@ select { width: 100%; padding: 15px; border-radius: 12px; border: 1px solid #d2d
 
 .btn-guardar { width: 100%; padding: 16px; background: var(--acento); color: var(--blanco); border: none; border-radius: 14px; font-size: 16px; font-weight: 600; cursor: pointer; margin-top: 10px; transition: 0.2s; }
 .btn-guardar:active { transform: scale(0.98); }
+/* Pantalla de Login */
+.login-container { height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; background: var(--fondo); }
+.login-container h2 { margin-bottom: 20px; color: var(--texto); }
+#pinInput { font-size: 24px; padding: 15px; text-align: center; border-radius: 12px; border: 1px solid #d2d2d7; margin-bottom: 15px; width: 150px; letter-spacing: 10px; outline: none; }
+.login-container button { padding: 15px 40px; font-size: 18px; background: var(--acento); color: var(--blanco); border: none; border-radius: 12px; cursor: pointer; font-weight: bold; transition: 0.2s; }
+.login-container button:active { transform: scale(0.95); }
+.error { color: var(--rojo); margin-top: 15px; font-weight: bold; font-size: 14px; }

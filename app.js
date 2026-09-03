@@ -1,10 +1,40 @@
 const URL_API = "https://script.google.com/macros/s/AKfycbzR1qqGqGvD7OUGKiWpzwLu502Q8wDPOA0xN04pmkLmX39_y34geRlastEhyddSaQWk/exec";
+const PIN_SECRETO = "199094";
 
 let inventario = [];
 let filtroActual = "todos";
 let subFiltroActual = "todos";
 let productoSeleccionado = null;
 
+// ==========================================
+// SISTEMA DE SEGURIDAD (PIN)
+// ==========================================
+function verificarPIN() {
+    const pinIngresado = document.getElementById("pinInput").value;
+    
+    if (pinIngresado === PIN_SECRETO) {
+        // Ocultar pantalla de bloqueo y mostrar la app
+        document.getElementById("pantallaLogin").classList.add("oculto");
+        document.getElementById("appPrincipal").classList.remove("oculto");
+        // Solo hasta este momento descargamos los datos de Google Sheets
+        cargarDatos(); 
+    } else {
+        // Mostrar error y limpiar el campo
+        document.getElementById("mensajeError").classList.remove("oculto");
+        document.getElementById("pinInput").value = "";
+    }
+}
+
+// Permitir usar la tecla "Enter" para acceder
+document.getElementById("pinInput").addEventListener("keypress", function(e) {
+    if (e.key === "Enter") {
+        verificarPIN();
+    }
+});
+
+// ==========================================
+// DESCARGA DE DATOS (CONEXIÓN CON SHEETS)
+// ==========================================
 async function cargarDatos() {
     try {
         const respuesta = await fetch(URL_API, { method: "GET", redirect: "follow" });
@@ -17,6 +47,9 @@ async function cargarDatos() {
     }
 }
 
+// ==========================================
+// RENDERIZADO Y FILTROS
+// ==========================================
 function renderizarTabla() {
     const textoBusqueda = document.getElementById("buscador").value.toLowerCase();
     const cuerpo = document.getElementById("cuerpoTabla");
@@ -60,6 +93,9 @@ function renderizarTabla() {
     });
 }
 
+// ==========================================
+// CONTROLADORES DEL MODAL EMERGENTE
+// ==========================================
 function abrirModal(codigoBarras) {
     productoSeleccionado = inventario.find(p => p.barras.toString() === codigoBarras.toString());
     if(!productoSeleccionado) return;
@@ -80,6 +116,9 @@ function ajustarStock(cantidad) {
     input.value = Number(input.value) + cantidad;
 }
 
+// ==========================================
+// ENVÍO DE DATOS A GOOGLE SHEETS
+// ==========================================
 async function guardarEdicion() {
     const nuevoStock = document.getElementById("modalStock").value;
     const nuevoEstado = document.getElementById("modalEstado").value;
@@ -111,7 +150,9 @@ async function guardarEdicion() {
     }
 }
 
-// Búsqueda
+// ==========================================
+// ESCUCHADORES DE EVENTOS
+// ==========================================
 document.getElementById("buscador").addEventListener("input", renderizarTabla);
 
 // Filtros principales
@@ -144,4 +185,5 @@ document.querySelectorAll(".btn-subfiltro").forEach(boton => {
     });
 });
 
-cargarDatos();
+// Nota: Hemos eliminado el "cargarDatos()" de aquí abajo. 
+// Ahora solo se activa dentro de la función verificarPIN() cuando la contraseña es correcta.

@@ -75,4 +75,17 @@
 
     <script src="app.js"></script>
 </body>
+<body>
+    <!-- Pantalla de Bloqueo -->
+    <div id="pantallaLogin" class="login-container">
+        <h2>🔒 Acceso Zona Sweet</h2>
+        <input type="password" id="pinInput" placeholder="PIN" inputmode="numeric" maxlength="4">
+        <button onclick="verificarPIN()">Entrar</button>
+        <p id="mensajeError" class="error oculto">PIN incorrecto</p>
+    </div>
+
+    <!-- Contenedor Principal Oculto (nota el id nuevo y la clase oculto) -->
+    <div class="app-container oculto" id="appPrincipal">
+        <header class="top-bar">
+            <!-- El resto de tu código sigue exactamente igual a partir de aquí -->
 </html>
