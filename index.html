@@ -7,7 +7,16 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div class="app-container">
+    <!-- Pantalla de Login -->
+    <div id="pantallaLogin" class="login-container">
+        <h2>🔒 Acceso Zona Sweet</h2>
+        <input type="password" id="pinInput" placeholder="PIN" inputmode="numeric" maxlength="6">
+        <button onclick="verificarPIN()">Entrar</button>
+        <p id="mensajeError" class="error oculto">PIN incorrecto</p>
+    </div>
+
+    <!-- Aplicación Principal (Oculta al inicio) -->
+    <div class="app-container oculto" id="appPrincipal">
         <header class="top-bar">
             <h1>Zona Sweet</h1>
             <input type="text" id="buscador" placeholder="🔍 Buscar por nombre o código...">
@@ -21,7 +30,6 @@
             <button class="btn-filtro" data-filtro="archivados">Archivados</button>
         </nav>
 
-        <!-- Sub-filtros de Caducidad (Ocultos por defecto) -->
         <div id="subFiltrosCaducidad" class="filtros-secundarios oculto">
             <button class="btn-subfiltro activo" data-sub="todos">Todas las Alertas</button>
             <button class="btn-subfiltro" data-sub="proximos">Próximos (7 días)</button>
@@ -45,13 +53,12 @@
         </main>
     </div>
 
-    <!-- Ventana Emergente (Modal) para Editar -->
+    <!-- Modal Edición -->
     <div id="modalEdicion" class="modal oculto">
         <div class="modal-contenido">
             <span class="cerrar" onclick="cerrarModal()">&times;</span>
             <h2 id="modalProductoNombre">Nombre del Producto</h2>
             <p id="modalProductoDetalle" class="detalle-gris">Categoría | Código</p>
-
             <div class="campo">
                 <label>Stock Físico:</label>
                 <div class="control-stock">
@@ -60,7 +67,6 @@
                     <button onclick="ajustarStock(1)">+</button>
                 </div>
             </div>
-
             <div class="campo">
                 <label>Estado del Producto:</label>
                 <select id="modalEstado">
@@ -68,24 +74,9 @@
                     <option value="Archivado">Archivado</option>
                 </select>
             </div>
-
             <button class="btn-guardar" onclick="guardarEdicion()">💾 Guardar Cambios</button>
         </div>
     </div>
-
     <script src="app.js"></script>
 </body>
-<body>
-    <!-- Pantalla de Bloqueo -->
-    <div id="pantallaLogin" class="login-container">
-        <h2>🔒 Acceso Zona Sweet</h2>
-        <input type="password" id="pinInput" placeholder="PIN" inputmode="numeric" maxlength="4">
-        <button onclick="verificarPIN()">Entrar</button>
-        <p id="mensajeError" class="error oculto">PIN incorrecto</p>
-    </div>
-
-    <!-- Contenedor Principal Oculto (nota el id nuevo y la clase oculto) -->
-    <div class="app-container oculto" id="appPrincipal">
-        <header class="top-bar">
-            <!-- El resto de tu código sigue exactamente igual a partir de aquí -->
 </html>
