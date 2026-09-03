@@ -6,35 +6,22 @@ let filtroActual = "todos";
 let subFiltroActual = "todos";
 let productoSeleccionado = null;
 
-// ==========================================
-// SISTEMA DE SEGURIDAD (PIN)
-// ==========================================
 function verificarPIN() {
     const pinIngresado = document.getElementById("pinInput").value;
-    
     if (pinIngresado === PIN_SECRETO) {
-        // Ocultar pantalla de bloqueo y mostrar la app
         document.getElementById("pantallaLogin").classList.add("oculto");
         document.getElementById("appPrincipal").classList.remove("oculto");
-        // Solo hasta este momento descargamos los datos de Google Sheets
         cargarDatos(); 
     } else {
-        // Mostrar error y limpiar el campo
         document.getElementById("mensajeError").classList.remove("oculto");
         document.getElementById("pinInput").value = "";
     }
 }
 
-// Permitir usar la tecla "Enter" para acceder
 document.getElementById("pinInput").addEventListener("keypress", function(e) {
-    if (e.key === "Enter") {
-        verificarPIN();
-    }
+    if (e.key === "Enter") verificarPIN();
 });
 
-// ==========================================
-// DESCARGA DE DATOS (CONEXIÓN CON SHEETS)
-// ==========================================
 async function cargarDatos() {
     try {
         const respuesta = await fetch(URL_API, { method: "GET", redirect: "follow" });
@@ -47,9 +34,6 @@ async function cargarDatos() {
     }
 }
 
-// ==========================================
-// RENDERIZADO Y FILTROS
-// ==========================================
 function renderizarTabla() {
     const textoBusqueda = document.getElementById("buscador").value.toLowerCase();
     const cuerpo = document.getElementById("cuerpoTabla");
@@ -60,7 +44,6 @@ function renderizarTabla() {
                                  prod.barras.toString().toLowerCase().includes(textoBusqueda);
         
         let coincideBoton = false;
-        
         if (filtroActual === "todos") coincideBoton = true;
         else if (filtroActual === "activos") coincideBoton = prod.estado === "Activo";
         else if (filtroActual === "archivados") coincideBoton = prod.estado === "Archivado";
@@ -73,7 +56,6 @@ function renderizarTabla() {
                 else if (subFiltroActual === "caducados") coincideBoton = (prod.estadoCad === "Caducado");
             }
         }
-
         return coincideBusqueda && coincideBoton;
     });
 
@@ -93,13 +75,9 @@ function renderizarTabla() {
     });
 }
 
-// ==========================================
-// CONTROLADORES DEL MODAL EMERGENTE
-// ==========================================
 function abrirModal(codigoBarras) {
     productoSeleccionado = inventario.find(p => p.barras.toString() === codigoBarras.toString());
     if(!productoSeleccionado) return;
-
     document.getElementById("modalProductoNombre").innerText = productoSeleccionado.producto;
     document.getElementById("modalProductoDetalle").innerText = `${productoSeleccionado.categoria} | ${productoSeleccionado.barras}`;
     document.getElementById("modalStock").value = productoSeleccionado.stock;
@@ -116,9 +94,6 @@ function ajustarStock(cantidad) {
     input.value = Number(input.value) + cantidad;
 }
 
-// ==========================================
-// ENVÍO DE DATOS A GOOGLE SHEETS
-// ==========================================
 async function guardarEdicion() {
     const nuevoStock = document.getElementById("modalStock").value;
     const nuevoEstado = document.getElementById("modalEstado").value;
@@ -126,13 +101,11 @@ async function guardarEdicion() {
     
     botonGuardar.innerText = "⏳ Guardando...";
     botonGuardar.disabled = true;
-
     const payload = { barras: productoSeleccionado.barras, stock: nuevoStock, estado: nuevoEstado };
 
     try {
         const respuesta = await fetch(URL_API, { method: 'POST', body: JSON.stringify(payload) });
         const resultado = await respuesta.json();
-
         if (resultado.ok) {
             cerrarModal();
             document.getElementById("tablaInventario").classList.add("oculto");
@@ -150,19 +123,14 @@ async function guardarEdicion() {
     }
 }
 
-// ==========================================
-// ESCUCHADORES DE EVENTOS
-// ==========================================
 document.getElementById("buscador").addEventListener("input", renderizarTabla);
 
-// Filtros principales
 document.querySelectorAll(".btn-filtro").forEach(boton => {
     boton.addEventListener("click", (e) => {
         document.querySelectorAll(".btn-filtro").forEach(b => b.classList.remove("activo"));
         e.target.classList.add("activo");
         filtroActual = e.target.dataset.filtro;
         
-        // Mostrar/Ocultar el menú de subfiltros
         if (filtroActual === "alertas") {
             document.getElementById("subFiltrosCaducidad").classList.remove("oculto");
         } else {
@@ -175,7 +143,6 @@ document.querySelectorAll(".btn-filtro").forEach(boton => {
     });
 });
 
-// Subfiltros de caducidad
 document.querySelectorAll(".btn-subfiltro").forEach(boton => {
     boton.addEventListener("click", (e) => {
         document.querySelectorAll(".btn-subfiltro").forEach(b => b.classList.remove("activo"));
@@ -184,6 +151,3 @@ document.querySelectorAll(".btn-subfiltro").forEach(boton => {
         renderizarTabla();
     });
 });
-
-// Nota: Hemos eliminado el "cargarDatos()" de aquí abajo. 
-// Ahora solo se activa dentro de la función verificarPIN() cuando la contraseña es correcta.
