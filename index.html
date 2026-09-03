@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Zona Sweet POS</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="app-container">
+        <header class="top-bar">
+            <h1>Zona Sweet</h1>
+            <input type="text" id="buscador" placeholder="🔍 Buscar por nombre o código...">
+        </header>
+
+        <nav class="filtros">
+            <button class="btn-filtro activo" data-filtro="todos">Todos</button>
+            <button class="btn-filtro" data-filtro="activos">Activos</button>
+            <button class="btn-filtro" data-filtro="sin-stock">Para Resurtir</button>
+            <button class="btn-filtro" data-filtro="alertas">Alertas Caducidad</button>
+            <button class="btn-filtro" data-filtro="archivados">Archivados</button>
+        </nav>
+
+        <!-- Sub-filtros de Caducidad (Ocultos por defecto) -->
+        <div id="subFiltrosCaducidad" class="filtros-secundarios oculto">
+            <button class="btn-subfiltro activo" data-sub="todos">Todas las Alertas</button>
+            <button class="btn-subfiltro" data-sub="proximos">Próximos (7 días)</button>
+            <button class="btn-subfiltro" data-sub="caducados">Ya Caducados</button>
+        </div>
+
+        <main class="tabla-contenedor">
+            <div id="cargando">Cargando base de datos...</div>
+            <table id="tablaInventario" class="oculto">
+                <thead>
+                    <tr>
+                        <th>Producto</th>
+                        <th>Stock</th>
+                        <th>Estado Stock</th>
+                        <th>Caducidad</th>
+                        <th>Estado</th>
+                    </tr>
+                </thead>
+                <tbody id="cuerpoTabla"></tbody>
+            </table>
+        </main>
+    </div>
+
+    <!-- Ventana Emergente (Modal) para Editar -->
+    <div id="modalEdicion" class="modal oculto">
+        <div class="modal-contenido">
+            <span class="cerrar" onclick="cerrarModal()">&times;</span>
+            <h2 id="modalProductoNombre">Nombre del Producto</h2>
+            <p id="modalProductoDetalle" class="detalle-gris">Categoría | Código</p>
+
+            <div class="campo">
+                <label>Stock Físico:</label>
+                <div class="control-stock">
+                    <button onclick="ajustarStock(-1)">-</button>
+                    <input type="number" id="modalStock" value="0">
+                    <button onclick="ajustarStock(1)">+</button>
+                </div>
+            </div>
+
+            <div class="campo">
+                <label>Estado del Producto:</label>
+                <select id="modalEstado">
+                    <option value="Activo">Activo</option>
+                    <option value="Archivado">Archivado</option>
+                </select>
+            </div>
+
+            <button class="btn-guardar" onclick="guardarEdicion()">💾 Guardar Cambios</button>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
